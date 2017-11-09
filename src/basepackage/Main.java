@@ -16,18 +16,17 @@ public class Main {
 
         int numberOfKeys = allowed.length();
 
-        if (!containsDigit(allowed)) {
+        if (required == 0 || !containsDigit(allowed)) {
             return "";
         }
 
-        if (required > -1 && required < 10 && allowed.contains("" + required))
-            return "" + required;
-
-
-        // Check if required can be built from allowed digits
+        // Check hacks
         String requiredString = ((Integer)required).toString();
         StringBuilder sequenceStr = new StringBuilder();
+
         for (int ch = 0; ch < requiredString.length(); ch++) {
+
+            // Check if required number is positive and can be built from allowed digits
             if (allowed.contains("" + requiredString.charAt(ch))) {
                 sequenceStr.append(requiredString.charAt(ch));
             }
@@ -38,13 +37,14 @@ public class Main {
         }
 
         if (sequenceStr.length() > 0) {
+            System.out.println("yo");
             return sequenceStr.toString();
         }
 
+        System.out.println("hey");
 
         // Check each possible number of presses
-        for (int len = 2; len <= maximum; len++) {
-            //String sequence = "";
+        for (int len = 3; len <= maximum; len++) {
             int[] sequence = new int[len];
             int laps = 1;
 
@@ -73,7 +73,7 @@ public class Main {
                     }
                 }
 
-                // Get new sequence > new lap
+                // Get new sequence -> new lap
                 for (int number = 0; number < len; number++) {
                     if (sequence[number] == numberOfKeys - 1) {
                         sequence[number] = 0;
@@ -92,7 +92,6 @@ public class Main {
     private static boolean checkSequence(String allowed, int[] sequence) {
 
         String possibleOperations = "+-*/";
-        //String possibleDigits = "0123456789";
 
         // The first symbol cannot be any operation except for "-"
         if (possibleOperations.contains("" + allowed.charAt(sequence[0]))
@@ -100,24 +99,26 @@ public class Main {
             return false;
         }
 
-        // The first symbol cannot be any operation except for "-"
+        // The first symbol cannot be "0"
         if (allowed.charAt(sequence[0]) == '0') {
             return false;
         }
 
         // The last symbol cannot be an operation
-        if (possibleOperations.contains("" + allowed.charAt(sequence[sequence.length - 1])))
+        if (possibleOperations.contains("" + allowed.charAt(sequence[sequence.length - 1]))) {
             return false;
+        }
 
         for (int i = 1; i < sequence.length; i++) {
 
-            // There cannot be to operations in a row
             if (possibleOperations.contains("" + allowed.charAt(sequence[i - 1]))
                     && (
-                            possibleOperations.contains("" + allowed.charAt(sequence[i]))
 
-                            // Operand cannot begin with "0"
-                            || allowed.charAt(sequence[i]) == '0')
+                        // There cannot be to operations in a row
+                        possibleOperations.contains("" + allowed.charAt(sequence[i]))
+
+                        // Operand cannot begin with "0"
+                        || allowed.charAt(sequence[i]) == '0')
                     ) {
                 return false;
             }
@@ -202,17 +203,19 @@ public class Main {
 
 
         // Allowed keys of 0123456789+-*/:
-        String keys = "12389*-";
+        String keys = "378912/-*";
 
         // Maximum press number:
-        int presses = 10;
+        int presses = 100;
 
         // Required number
-        int required = 158;
+        int required = -3434;
 
         // ------------------------------------------
 
         String result = combination(presses, required, keys);
         System.out.println(result);
+        
+        // out: -2*1717
     }
 }
